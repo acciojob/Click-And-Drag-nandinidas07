@@ -1,44 +1,51 @@
-// Your code here.
+// Select the container and all cube items
 const container = document.querySelector('.items');
 const cubes = document.querySelectorAll('.item');
 
+// Track which cube is being dragged
 let selectedCube = null;
 let offsetX = 0;
 let offsetY = 0;
 
-// Handle mouse down
+// Add mousedown listener to each cube
 cubes.forEach(cube => {
   cube.addEventListener('mousedown', (e) => {
     selectedCube = cube;
 
-    // Get mouse position inside the cube
+    // Calculate offset between mouse and cube corner
     offsetX = e.clientX - cube.offsetLeft;
     offsetY = e.clientY - cube.offsetTop;
 
-    cube.style.zIndex = 1000; // bring to front
+    // Bring to front
+    cube.style.zIndex = 1000;
     cube.style.transition = 'none';
+
+    // Prevent text selection while dragging
+    e.preventDefault();
   });
 });
 
-// Handle mouse move
+// Move the cube as the mouse moves
 document.addEventListener('mousemove', (e) => {
   if (!selectedCube) return;
 
-  // New position (constrained to container)
+  // Get container's position relative to viewport
   const containerRect = container.getBoundingClientRect();
 
+  // Calculate new position within container
   let x = e.clientX - containerRect.left - offsetX;
   let y = e.clientY - containerRect.top - offsetY;
 
-  // Boundaries
+  // Constrain movement within boundaries
   x = Math.max(0, Math.min(container.offsetWidth - selectedCube.offsetWidth, x));
   y = Math.max(0, Math.min(container.offsetHeight - selectedCube.offsetHeight, y));
 
+  // Apply new position
   selectedCube.style.left = ${x}px;
   selectedCube.style.top = ${y}px;
 });
 
-// Handle mouse up
+// Stop dragging on mouse up
 document.addEventListener('mouseup', () => {
   if (selectedCube) {
     selectedCube.style.zIndex = 1;
